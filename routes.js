@@ -18,6 +18,8 @@ module.exports = function(app) {
     app.post('/merk/create',todoList.createMerk);
     app.post('/kendaraan/create',todoList.createKendaraan);
     app.post('/pengajuan/create',todoList.createPengajuan);
+    app.post('/nasabah/pengajuan/create',todoList.createPengajuanNasabah);
+    app.post('/nasabah/create',todoList.createNasabah);
     
     app.put('/cabang/:cabangId',todoList.updateCabang);
     app.put('/merk/:merkId',todoList.updateMerk);

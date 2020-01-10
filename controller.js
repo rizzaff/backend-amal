@@ -20,7 +20,7 @@ exports.showCabang = function (req, res) {
 };
 
 exports.showCabangById = function (req, res) {
-    let cabangId = req.params.cabangId;
+    let cabangID = req.params.cabangId;
 
     connection.query('SELECT * FROM cabang WHERE cabangID = ?',
         [cabangID],
@@ -37,9 +37,10 @@ exports.createCabang = function (req, res) {
 
     let nama = req.body.nama;
     let alamat = req.body.alamat;
+    let no_telp = req.body.noTelp;
 
-    connection.query('INSERT INTO cabang (namaCabang, alamatCabang) VALUES (?,?)',
-        [nama, alamat],
+    connection.query('INSERT INTO cabang (nama,alamat,no_telp) VALUES (?,?,?)',
+        [nama, alamat, no_telp],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
@@ -52,10 +53,11 @@ exports.createCabang = function (req, res) {
 exports.updateCabang = function (req, res) {
     let nama = req.body.nama;
     let alamat = req.body.alamat;
-    let cabangId = req.params.cabangId;
+    let cabangID = req.params.cabangId;
+    let no_telp = req.body.noTelp;
 
-    connection.query('UPDATE `cabang` SET `namaCabang`=?,`alamatCabang`=? WHERE `cabangID`=?',
-        [nama, alamat, cabangId],
+    connection.query('UPDATE `cabang` SET `nama`=?,`alamat`=? , `no_telp`=? WHERE `cabangID`=?',
+        [nama, alamat, cabangID, no_telp],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
@@ -370,4 +372,115 @@ exports.topUpDompet = function (req, res) {
     connection.query('UPDATE `mutasidompet` SET `nilaiMutasi`=((select nilaiMutasi where `customerID`= ? ) - ?) where `customerID`=?',
         [customerID, angsuran, customerID],
     );
+};
+
+exports.createNasabah = function (req, res){
+    console.log("====== Run endpoint /nasabah/create - createNasabah =======");
+    let nasabah_id = req.body.nasabah_id
+    let nama =	req.body.nama
+    let tempat_lahir =	req.body.tempat_lahir
+    let tanggal_lahir =	req.body.tanggal_lahir
+    let jenis_kelamin =	req.body.jenis_kelamin
+    let status = req.body.status
+    let nama_ibu = req.body.nama_ibu
+    let no_ktp = req.body.no_ktp
+    let foto_ktp = req.body.foto_ktp
+    let alamat = req.body.alamat
+    let provinsi = req.body.provinsi
+    let kota = req.body.kota
+    let kabupaten = req.body.kabupaten
+    let kecamatan = req.body.kecamatan
+    let kelurahan = req.body.kelurahan
+
+    console.log("===== Insert data Jenis Nasabah =====");
+    connection.query('INSERT INTO `nasabah`(nasabah_id, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, status, nama_ibu, no_ktp, foto_ktp, alamat, provinsi, kota, kabupaten, kecamatan, kelurahan) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        [nasabah_id, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, status, nama_ibu, no_ktp, foto_ktp, alamat, provinsi, kota, kabupaten, kecamatan, kelurahan],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    }
+
+exports.createPengajuanNasabah = function (req, res) {
+    console.log("====== Run endpoint /nasabah/pengajuan/create - createPengajuanNasabah =======");
+    let jenisNasabah = req.body.jenisNasabah;
+    let tipenasabah_id = uuidv4();
+
+    if (jenisNasabah == "M") {
+        console.log("===== pengajuan Nasabah Jenis Nasabah Mikro =====");
+        //-------------------mikro------------------------//
+        let mikro_id = uuidv4(); 
+        let pegawai_id = "";
+        let nama = req.body.nama;	
+        let bidang_usaha = req.body.bidang_usaha;
+        let lama_usaha = req.body.lama_usaha;	
+        let status_usaha = req.body.status_usaha;
+        let jarak = req.body.jarak;	
+        let jenis = req.body.jenis;
+        let alamat = req.body.alamat;	
+        let provinsi = req.body.provinsi;
+        let kabupaten = req.body.kabupaten;
+        let kecamatan = req.body.kecamatan;
+        let kelurahan = req.body.kelurahan;
+        let kode_pos = req.body.kode_Pos;
+    } else {
+        console.log("===== pengajuan Nasabah Jenis Nasabah Pegawai =====");
+        //--------------------pegawai----------------------//
+        let pegawai_id = uuidv4();
+        let mikro_id = ""; 
+        let nama = req.body.nama; 	
+        let nama_perusahaan = req.body.nama_perusahaan;
+        let nama_pimpinan = req.body.nama_pimpinan;	
+        let nomor_sk = req.body.nomor_sk;
+        let no_telp = req.body.no_telp;
+        let status = req.body.status;
+        let jenis_perusahaan = req.body.jenis_perusahaan;
+        let tgl_pensiun = req.body.tgl_pensiun;
+        let lama_kerja 	= req.body.lama_kerja;
+        let alamat = req.body.alamat;
+        let provinsi = req.body.provinsi;
+        let kabupaten =	req.body.kabupaten;
+        let kecamatan =	req.body.kecamatan;
+        let kelurahan =	req.body.kelurahan;
+        let kode_pos =	req.body.kode_pos;
+        let kartu_identitas = req.body.kartu_identitas;
+        let sk_pegawai =req.body.sk_pegawai;
+    }
+
+    connection.query('INSERT INTO `tipe_nasabah`(`tipenasabah_id`,`pegawai_id`,`mikro_id`) VALUES (?,?,?)',
+        [tipenasabah_id, pegawai_id, mikro_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+    });
+
+    if (jenisNasabah === 'M') {
+        console.log("===== Insert data Jenis Nasabah Mikro =====");
+        connection.query('INSERT INTO `mikro`(mikro_id, nama, bidang_usaha, lama_usaha, status_usaha, jarak, jenis, alamat, provinsi, kabupaten, kecamatan, kelurahan, kode_pos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [mikro_id, nama, bidang_usaha, lama_usaha, status_usaha, jarak, jenis, alamat, provinsi, kabupaten, kecamatan, kelurahan, kode_pos],
+            function (error, rows, fields) {
+                if (error) {
+                    console.log(error)
+                } else {
+                    response.ok(rows, res)
+                }
+            });
+    } else {
+        console.log("===== Insert data Jenis Nasabah Pegawai =====");
+        connection.query('INSERT INTO `pegawai`(pegawai_id, nama, nama_perusahaan, nama_pimpinan, nomor_sk, no_telp, status, jenis_perusahaan, tgl_pensiun, lama_kerja, alamat, provinsi, kabupaten, kecamatan, kelurahan, kode_pos, kartu_identitas, sk_pegawai) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [pegawai_id, nama, nama_perusahaan, nama_pimpinan, nomor_sk, no_telp, status, jenis_perusahaan, tgl_pensiun, lama_kerja, alamat, provinsi, kabupaten, kecamatan, kelurahan, kode_pos, kartu_identitas, sk_pegawai],
+            function (error, rows, fields) {
+                if (error) {
+                    console.log(error)
+                } else {
+                    response.ok(rows, res)
+                }
+            });
+    }
 };
