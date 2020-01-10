@@ -11,11 +11,13 @@ module.exports = function(app) {
     app.post('/merk/:merkId',todoList.showMerkById); 
     app.post('/kendaraan',todoList.showKendaraan); 
     app.post('/kendaraan/:kendaraanID',todoList.showKendaraanById);
+    app.post('/pengajuan/:pengajuanId',todoList.showPengajuanById);
+    app.post('/pengajuan',todoList.showPengajuan);
     app.post('/login',auth.login);
-    app.post('/cabang',todoList.createCabang);
-    app.post('/merk',todoList.createMerk);
-    app.post('/kendaraan',todoList.createKendaraan);
-    app.post('/pengajuan',todoList.createPengajuan);
+    app.post('/cabang/create',todoList.createCabang);
+    app.post('/merk/create',todoList.createMerk);
+    app.post('/kendaraan/create',todoList.createKendaraan);
+    app.post('/pengajuan/create',todoList.createPengajuan);
     
     app.put('/cabang/:cabangId',todoList.updateCabang);
     app.put('/merk/:merkId',todoList.updateMerk);

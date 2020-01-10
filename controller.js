@@ -246,6 +246,38 @@ exports.createPengajuan = function (req, res) {
 
 };
 
+exports.showPengajuan = function (req, res) {
+
+    let pengajuanID = req.params.pengajuanID;
+    let customerID = req.body.customerID;
+    let username = uuidv4();
+    let password = uuidv4();
+    let status = true;
+
+    connection.query('SELECT * FROM `pengajuan`',
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+    });
+};
+
+exports.showPengajuanById = function (req, res) {
+    let pengajuanID = req.params.pengajuanId;
+
+    connection.query('SELECT * FROM pengajuan WHERE pengajuanID = ?',
+        [pengajuanID],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
 exports.verifikasiPengajuan = function (req, res) {
 
     let pengajuanID = req.params.pengajuanID;
