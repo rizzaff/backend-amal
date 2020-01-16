@@ -16,11 +16,10 @@ exports.createPengajuan = function (req, res) {
     let marhunbih = req.body.marhunbih;
     let angsuran = req.body.angsuran;
     let verifikasi = req.body.verifikasi;
-    let tgl_transaksi = req.body.tgl_transaksi;
     let tenor = req.body.tenor;
 
-    connection.query('INSERT INTO pengajuan(pengajuan_id, nasabah_id, kendaraan_id, cabang_id, kondisi_kendaraan, harga_pasaran, uangmuka_id, marhunbih, angsuran, verifikasi, tgl_transaksi, tenor) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
-        [pengajuan_id, nasabah_id, kendaraan_id, cabang_id, kondisi_kendaraan, harga_pasaran, uangmuka_id, marhunbih, angsuran, verifikasi, tgl_transaksi, tenor],
+    connection.query('INSERT INTO pengajuan(pengajuan_id, nasabah_id, kendaraan_id, cabang_id, kondisi_kendaraan, harga_pasaran, uangmuka_id, marhunbih, angsuran, verifikasi, tgl_transaksi, tenor) VALUES (?,?,?,?,?,?,?,?,?,?,current_timestamp(),?)',
+        [pengajuan_id, nasabah_id, kendaraan_id, cabang_id, kondisi_kendaraan, harga_pasaran, uangmuka_id, marhunbih, angsuran, verifikasi, tenor],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)

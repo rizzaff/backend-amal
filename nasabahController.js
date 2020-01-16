@@ -10,7 +10,6 @@ exports.createPegawai = function (req, res) {
     let nama_perusahaan = req.body.nama_perusahaan;
     let nama_pimpinan = req.body.nama_pimpinan;
     let nomor_sk = req.body.nomor_sk;
-    let no_telp = req.body.no_telp;
     let status = req.body.status;
     let jenis_perusahaan = req.body.jenis_perusahaan;
     let tgl_pensiun = req.body.tgl_pensiun;

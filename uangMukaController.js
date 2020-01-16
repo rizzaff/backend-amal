@@ -65,9 +65,10 @@ exports.createUangMuka = function (req, res) {
     let cash_id = req.body.cash_id;
     let tabemas_id = req.body.tabemas_id;
     let jaminan_id = req.body.jaminan_id;
+    let harga = req.body.harga;
 
-    connection.query('INSERT INTO status_uangmuka(uangmuka_id, cash_id, tabemas_id, jaminan_id) VALUES (?,?,?,?)',
-        [uangmuka_id, cash_id, tabemas_id, jaminan_id],
+    connection.query('INSERT INTO status_uangmuka(uangmuka_id, cash_id, tabemas_id, jaminan_id, harga) VALUES (?,?,?,?,?)',
+        [uangmuka_id, cash_id, tabemas_id, jaminan_id, harga],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
