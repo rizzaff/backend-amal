@@ -5,6 +5,7 @@ const connection = require('./conn');
 const uuidv4 = require('uuid/v4');
 
 exports.index = function (req, res) {
+    // console.log("ID: " + uuidv4())
     response.ok("welcome to amal backend", res)
 };
 
