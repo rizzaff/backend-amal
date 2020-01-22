@@ -19,6 +19,7 @@ module.exports = function(app) {
     app.post('/kendaraan/create',todoList.createKendaraan);
     app.post('/pengajuan/create',todoList.createPengajuan);
     app.post('/nasabah/pengajuan/create',todoList.createPengajuanNasabah);
+    app.post('/nasabah/pengajuan/pembayarandp',todoList.createPembayaranDP);
     app.post('/nasabah/create',todoList.createNasabah);
     
     app.put('/cabang/:cabangId',todoList.updateCabang);
@@ -27,6 +28,5 @@ module.exports = function(app) {
     app.put('/pengajuan/:pengajuanID',todoList.verifikasiPengajuan);
     app.put('/pembayaran/transfer/:angsuranID',todoList.pembayaranTransfer);
     app.put('/pembayaran/dompet/:angsuranID',todoList.pembayaranDompet);
-    app.put('/topup/:customerID',todoList.topUpDompet);
-    
+    app.put('/topup/:customerID',todoList.topUpDompet);  
 };

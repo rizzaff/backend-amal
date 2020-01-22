@@ -194,8 +194,8 @@ exports.updateKendaraan = function (req, res) {
 
 exports.createPengajuan = function (req, res) {
 
-    let customerID = uuidv4();
-    let pengajuanID = uuidv4();
+    let customerID = uuidv4().slice(24,36);
+    let pengajuanID = uuidv4().slice(24,36);
     let kendaraanID = req.body.kendaraanID;
     let cabangID = req.body.cabangID;
     let noKtp = req.body.noKtp;
@@ -237,7 +237,7 @@ exports.createPengajuan = function (req, res) {
         [pengajuanID, customerID, kendaraanID, cabangID, status],);
 
     for (let i = 0; i < tenor; i++) {
-        let angsuranID = uuidv4();
+        let angsuranID = uuidv4().slice(24,36);
 
         connection.query('INSERT INTO `angsuran`(`angsuranID`, `pengajuanID`, angsuran, tanggal, status) VALUES (?,?,?,?,?)',
             [angsuranID, pengajuanID, angsuran, tanggal, status],);
@@ -252,8 +252,8 @@ exports.showPengajuan = function (req, res) {
 
     let pengajuanID = req.params.pengajuanID;
     let customerID = req.body.customerID;
-    let username = uuidv4();
-    let password = uuidv4();
+    let username = uuidv4().slice(24,36);
+    let password = uuidv4().slice(24,36);
     let status = true;
 
     connection.query('SELECT * FROM `pengajuan`',
@@ -284,8 +284,8 @@ exports.verifikasiPengajuan = function (req, res) {
 
     let pengajuanID = req.params.pengajuanID;
     let customerID = req.body.customerID;
-    let username = uuidv4();
-    let password = uuidv4();
+    let username = uuidv4().slice(24,36);
+    let password = uuidv4().slice(24,36);
     let status = true;
 
     connection.query('UPDATE `pengajuan` SET `verifikasi`=? WHERE `pengajuanID`=?',
@@ -376,7 +376,7 @@ exports.topUpDompet = function (req, res) {
 
 exports.createNasabah = function (req, res){
     console.log("====== Run endpoint /nasabah/create - createNasabah =======");
-    let nasabah_id = req.body.nasabah_id
+    let nasabah_id = uuidv4().slice(24,36);
     let nama =	req.body.nama
     let tempat_lahir =	req.body.tempat_lahir
     let tanggal_lahir =	req.body.tanggal_lahir
@@ -407,12 +407,12 @@ exports.createNasabah = function (req, res){
 exports.createPengajuanNasabah = function (req, res) {
     console.log("====== Run endpoint /nasabah/pengajuan/create - createPengajuanNasabah =======");
     let jenisNasabah = req.body.jenisNasabah;
-    let tipenasabah_id = uuidv4();
+    let tipenasabah_id = uuidv4().slice(24,36);
 
     if (jenisNasabah == "M") {
         console.log("===== pengajuan Nasabah Jenis Nasabah Mikro =====");
         //-------------------mikro------------------------//
-        let mikro_id = uuidv4(); 
+        let mikro_id = uuidv4().slice(24,36); 
         let pegawai_id = "";
         let nama = req.body.nama;	
         let bidang_usaha = req.body.bidang_usaha;
@@ -426,10 +426,21 @@ exports.createPengajuanNasabah = function (req, res) {
         let kecamatan = req.body.kecamatan;
         let kelurahan = req.body.kelurahan;
         let kode_pos = req.body.kode_Pos;
+
+        console.log("===== Insert data Jenis Nasabah Mikro =====");
+        connection.query('INSERT INTO `mikro`(mikro_id, nama, bidang_usaha, lama_usaha, status_usaha, jarak, jenis, alamat, provinsi, kabupaten, kecamatan, kelurahan, kode_pos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [mikro_id, nama, bidang_usaha, lama_usaha, status_usaha, jarak, jenis, alamat, provinsi, kabupaten, kecamatan, kelurahan, kode_pos],
+            function (error, rows, fields) {
+                if (error) {
+                    console.log(error)
+                } else {
+                    response.ok(rows, res)
+                }
+            });
     } else {
         console.log("===== pengajuan Nasabah Jenis Nasabah Pegawai =====");
         //--------------------pegawai----------------------//
-        let pegawai_id = uuidv4();
+        let pegawai_id = uuidv4().slice(24,36);
         let mikro_id = ""; 
         let nama = req.body.nama; 	
         let nama_perusahaan = req.body.nama_perusahaan;
@@ -448,30 +459,7 @@ exports.createPengajuanNasabah = function (req, res) {
         let kode_pos =	req.body.kode_pos;
         let kartu_identitas = req.body.kartu_identitas;
         let sk_pegawai =req.body.sk_pegawai;
-    }
 
-    connection.query('INSERT INTO `tipe_nasabah`(`tipenasabah_id`,`pegawai_id`,`mikro_id`) VALUES (?,?,?)',
-        [tipenasabah_id, pegawai_id, mikro_id],
-        function (error, rows, fields) {
-            if (error) {
-                console.log(error)
-            } else {
-                response.ok(rows, res)
-            }
-    });
-
-    if (jenisNasabah === 'M') {
-        console.log("===== Insert data Jenis Nasabah Mikro =====");
-        connection.query('INSERT INTO `mikro`(mikro_id, nama, bidang_usaha, lama_usaha, status_usaha, jarak, jenis, alamat, provinsi, kabupaten, kecamatan, kelurahan, kode_pos) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-            [mikro_id, nama, bidang_usaha, lama_usaha, status_usaha, jarak, jenis, alamat, provinsi, kabupaten, kecamatan, kelurahan, kode_pos],
-            function (error, rows, fields) {
-                if (error) {
-                    console.log(error)
-                } else {
-                    response.ok(rows, res)
-                }
-            });
-    } else {
         console.log("===== Insert data Jenis Nasabah Pegawai =====");
         connection.query('INSERT INTO `pegawai`(pegawai_id, nama, nama_perusahaan, nama_pimpinan, nomor_sk, no_telp, status, jenis_perusahaan, tgl_pensiun, lama_kerja, alamat, provinsi, kabupaten, kecamatan, kelurahan, kode_pos, kartu_identitas, sk_pegawai) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             [pegawai_id, nama, nama_perusahaan, nama_pimpinan, nomor_sk, no_telp, status, jenis_perusahaan, tgl_pensiun, lama_kerja, alamat, provinsi, kabupaten, kecamatan, kelurahan, kode_pos, kartu_identitas, sk_pegawai],
@@ -483,4 +471,231 @@ exports.createPengajuanNasabah = function (req, res) {
                 }
             });
     }
+
+    connection.query('INSERT INTO `tipe_nasabah`(`tipenasabah_id`,`pegawai_id`,`mikro_id`) VALUES (?,?,?)',
+        [tipenasabah_id, pegawai_id, mikro_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+    });
 };
+
+exports.createPembayaranDP = function(req, res){
+    console.log("====== Run endpoint /nasabah/pengajuan/pembayarandp - createPembayaranDP =======");
+    let jenisDP = req.body.jenisDP
+    let uangmuka_id = uuidv4().slice(24,36);
+
+    if (jenisDP == "TE") {
+        console.log("====== Run endpoint /nasabah/pengajuan/pembayarandp tipe tabungan emas - createPembayaranDP =======");
+        let tabemas_id = uuidv4().slice(24,36);
+        let cash_id = "";
+        let jaminan_id = ""; 
+        
+        connection.query('INSERT INTO `tab_emas`(tabemas_id,no_rek,saldo) VALUES (?,?,?)',
+        [tabemas_id,no_rek,saldo],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    } else if (jenisDP = "J") {
+        console.log("====== Run endpoint /nasabah/pengajuan/pembayarandp tipe Jaminan - createPembayaranDP =======");
+        let jaminan_id = uuidv4().slice(24,36);
+        let cash_id = "";
+        let tabemas_id = "";
+
+        connection.query('INSERT INTO `jaminan`(jaminan_id, jenis, merk, tipe, harga, jenis_perhiasan, jumlah, berat_kotor, berat_bersih, karat, taksiran, keterangan) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+        [jaminan_id, jenis, merk, tipe, harga, jenis_perhiasan, jumlah, berat_kotor, berat_bersih, karat, taksiran, keterangan],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    } else {
+        console.log("====== Run endpoint /nasabah/pengajuan/pembayarandp tipe Cash - createPembayaranDP =======");
+        let cash_id = uuidv4().slice(24,36);
+        let tabemas_id = "";
+        let jaminan_id = "";
+
+        connection.query('INSERT INTO `cash`(cash_id, cash) VALUES (?,?)',
+        [cash_id, cash],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    }
+
+    console.log("====== Run endpoint /nasabah/pengajuan/pembayarandp - insert into tabel status_uangmuka =======");
+    connection.query('INSERT INTO `status_uangmuka`(uangmuka_id, cash_id, tabemas_id, jaminan_id) VALUES (?,?,?,?)',
+        [tipenasabah_id, pegawai_id, mikro_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+    });
+}
+
+exports.createInquiry = function(req,res){
+    console.log("====== Run endpoint /inquiry/va - createPembayaranAngsuran =======");
+    let inquiry = req.body.inquiry;
+    let status_angsuran = "request_bayar";
+    let jenis_pembayaran = req.body.jenis_pembayaran;
+
+    // tabel angsuran = angsuran_id, pengajuan_id, jenispembayaran_id, jatuh_tempo, status_angsuran
+    //------------update tabel angsuran, pada status_pembayaran ganti jadi request bayar
+    connection.query('UPDATE `angsuran` SET `status_angsuran`=? WHERE `angsuran_id`=?',
+        [status_angsuran, angsuran_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+
+    //------------update tabel jenis pembayaran tipe pembayaran
+    let jenispembayaran_id = req.body.jenispembayaran_id;
+    let outlet_id = req.body.outlet_id;
+    let va_id =	req.body.va_id;
+    let gcash_id =	req.body.gcash_id;
+    let tabemas_id =req.body.tabemas_id;
+
+    if (jenis_pembayaran = "VA") {
+        connection.query('UPDATE `jenis_pembayaran` SET `va_id`=? WHERE `jenispembayaran_id`=?',
+        [jenispembayaran_id, va_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    } else if (jenis_pembayaran = "GC"){
+        connection.query('UPDATE `jenis_pembayaran` SET `gcash_id`=? WHERE `jenispembayaran_id`=?',
+        [jenispembayaran_id, gcash_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    } else if (jenis_pembayaran = "TE"){
+        connection.query('UPDATE `jenis_pembayaran` SET `tabemas_id`=? WHERE `jenispembayaran_id`=?',
+        [jenispembayaran_id, tabemas_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    } else {
+        connection.query('UPDATE `jenis_pembayaran` SET `outlet_id`=? WHERE `jenispembayaran_id`=?',
+        [jenispembayaran_id, outlet_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    }
+}
+
+//-------------------------------belum--------------------------------//
+exports.createPembayaranAngsuran = function(req, res){
+    console.log("====== Run endpoint /nasabah/pembayaranangsuran - createPembayaranAngsuran =======");
+    let pilihanBayar = req.body.pilihanBayar
+    let jenispembayaran_id = uuidv4().slice(24,36);
+
+    if (jenisDP == "TE") {
+        console.log("====== Run endpoint /nasabah/pembayaranangsuran tipe tabungan emas - createPembayaranAngsuran =======");
+        let tabemas_id = uuidv4().slice(24,36);
+        let gcash_id = "";
+        let outlet_id = ""; 
+        let va_id = "";
+        
+        connection.query('INSERT INTO `tab_emas`(tabemas_id,no_rek,saldo) VALUES (?,?,?)',
+        [tabemas_id,no_rek,saldo],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    } else if (jenisDP = "VA") {
+        console.log("====== Run endpoint /nasabah/pembayaranangsuran tipe virtaul Account - createPembayaranAngsuran =======");
+        let va_id = uuidv4().slice(24,36);
+        let gcash_id = "";
+        let tabemas_id = "";
+        let outlet_id = "";
+
+        connection.query('INSERT INTO `virtual_account`(va_id, nomor_virtual, bank, nominal) VALUES (?,?,?,?)',
+        [va_id, nomor_virtual, bank, nominal],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    } else (jenisDP = "GC") {
+        console.log("====== Run endpoint /nasabah/pembayaranangsuran tipe gcash - createPembayaranAngsuran =======");
+        let gcash_id = uuidv4().slice(24,36);
+        let tabemas_id = "";
+        let va_id = "";
+        let outlet_id = "";
+
+        connection.query('INSERT INTO `gcash`(gcash_id, nomor_gcash, saldo) VALUES (?,?)',
+        [gcash_id, nomor_cash, saldo],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    } else {
+        console.log("====== Run endpoint /nasabah/pembayaranangsuran tipe outlet - createPembayaranAngsuran =======");
+        let outlet_id = uuidv4().slice(24,36);
+        let tabemas_id = "";
+        let va_id = "";
+        let gcash_id = "";
+
+        connection.query('INSERT INTO `outlet`(outlet_id,nomor_transaksi,nominal) VALUES (?,?,?)',
+        [outlet_id,nomor_transaksi,nominal],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+    }
+
+
+    console.log("====== Run endpoint /nasabah/pengajuan/pembayarandp - insert into tabel jenis_pembayaran =======");
+    connection.query('INSERT INTO `jenis_pembayaran`(outlet_id, va_id, gcash_id, tabemas_id) VALUES (?,?,?,?)',
+        [jenispembayaran_id,outlet_id,va_id,gcash_id,tabemas_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+    });
+} 
