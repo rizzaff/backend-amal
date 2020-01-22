@@ -20,6 +20,7 @@ module.exports = function(app) {
     app.post('/pengajuan/create',todoList.createPengajuan);
     app.post('/nasabah/pengajuan/create',todoList.createPengajuanNasabah);
     app.post('/nasabah/pengajuan/pembayarandp',todoList.createPembayaranDP);
+    app.post('/nasabah/pembayaranangsuran', todoList.createPembayaranAngsuran);
     app.post('/nasabah/create',todoList.createNasabah);
     
     app.put('/cabang/:cabangId',todoList.updateCabang);
