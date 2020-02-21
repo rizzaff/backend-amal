@@ -28,3 +28,18 @@ exports.createPengajuan = function (req, res) {
             }
         });
 };
+
+exports.verifikasiPengajuan = function (req, res) {
+    
+    let pengajuan_id = req.body.pengajuan_id;
+    
+    connection.query('UPDATE pengajuan SET verifikasi=true WHERE pengajuan_id = ?',
+        [pengajuan_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};

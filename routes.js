@@ -7,6 +7,7 @@ module.exports = function(app) {
     const nasabah = require('./nasabahController');
     const uangMuka = require('./uangMukaController');
     const pengajuan = require('./pengajuanController');
+    const angsuran = require('./angsuranController');
     const auth = require('./authController');
 
     app.post('/',todoList.index);
@@ -33,10 +34,15 @@ module.exports = function(app) {
     // app.post('/kendaraan/:kendaraanID',todoList.showKendaraanById);
     // app.put('/kendaraan/:kendaraanID',todoList.updateKendaraan);
     
+    app.get('/kendaraan/merk',kendaraan.viewMerk);
+    app.get('/kendaraan/merk/:merkId',kendaraan.viewDetailMerk);
+    app.get('/kendaraan/list/:merk_id/:status',kendaraan.viewList);
+    app.get('/kendaraan/list/warna/:tipe/:status',kendaraan.viewListWarna);
+    app.get('/kendaraan/list/:tipeId',kendaraan.viewDetailKendaraan);
     app.post('/merk',kendaraan.createMerk);
-    app.post('/kendaraan/baru',kendaraan.createKendaraanBaru);
-    app.post('/kendaraan/bekas',kendaraan.createKendaraanBekas);
-    app.post('/kendaraan/status',kendaraan.createStatusKendaraan);
+    app.post('/kendaraan/list',kendaraan.createKendaraanList);
+    app.post('/kendaraan/nasabah',kendaraan.createKendaraanNasabah);
+    // app.post('/kendaraan/status',kendaraan.createStatusKendaraan);
     
     app.post('/nasabah/pegawai',nasabah.createPegawai);
     app.post('/nasabah/mikro',nasabah.createMikro);
@@ -51,6 +57,8 @@ module.exports = function(app) {
     app.post('/cabang',cabang.createCabang);
     
     app.post('/pengajuan',pengajuan.createPengajuan);
+    app.post('/pengajuan/buatAngsuran',angsuran.createAngsuran);
+    app.put('/pengajuan/verifikasi',pengajuan.verifikasiPengajuan);
     
     app.put('/pembayaran/transfer/:angsuranID',todoList.pembayaranTransfer);
     app.put('/pembayaran/dompet/:angsuranID',todoList.pembayaranDompet);
