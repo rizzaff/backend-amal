@@ -20,3 +20,26 @@ exports.createCabang = function (req, res) {
             }
         });
 };
+
+exports.viewCabang = function (req, res) {
+    connection.query('select * from cabang limit 10',
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.cariCabang = function (req, res) {
+    let cari = '%'+req.params.cari+'%';
+    connection.query(`select * from cabang where nama like ?`,[cari],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};

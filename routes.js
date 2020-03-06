@@ -4,11 +4,14 @@ module.exports = function(app) {
     const todoList = require('./controller');
     const kendaraan = require('./kendaraanController');
     const cabang = require('./cabangController');
+    const emas = require('./emasController');
     const nasabah = require('./nasabahController');
+    const pekerjaan = require('./pekerjaanController');
     const uangMuka = require('./uangMukaController');
     const pengajuan = require('./pengajuanController');
     const angsuran = require('./angsuranController');
     const auth = require('./authController');
+    const uploadGambar = require('./uploadGambar');
 
     app.post('/',todoList.index);
     
@@ -34,28 +37,37 @@ module.exports = function(app) {
     // app.post('/kendaraan/:kendaraanID',todoList.showKendaraanById);
     // app.put('/kendaraan/:kendaraanID',todoList.updateKendaraan);
     
-    app.get('/kendaraan/merk',kendaraan.viewMerk);
-    app.get('/kendaraan/merk/:merkId',kendaraan.viewDetailMerk);
+    app.get('/kendaraan/merk/:kategori',kendaraan.viewMerk);
+    app.get('/kendaraan/merk/cari/:kategori/:cari',kendaraan.cariMerk);
+    app.get('/kendaraan/merk/detail/:merkId',kendaraan.viewDetailMerk);
     app.get('/kendaraan/list/:merk_id/:status',kendaraan.viewList);
     app.get('/kendaraan/list/warna/:tipe/:status',kendaraan.viewListWarna);
     app.get('/kendaraan/list/:tipeId',kendaraan.viewDetailKendaraan);
+    app.get('/kendaraan/list/cari/:merk_id/:status/:cari',kendaraan.cariTipe);
+    
     app.post('/merk',kendaraan.createMerk);
     app.post('/kendaraan/list',kendaraan.createKendaraanList);
     app.post('/kendaraan/nasabah',kendaraan.createKendaraanNasabah);
     // app.post('/kendaraan/status',kendaraan.createStatusKendaraan);
     
-    app.post('/nasabah/pegawai',nasabah.createPegawai);
-    app.post('/nasabah/mikro',nasabah.createMikro);
-    app.post('/nasabah/tipe',nasabah.createTipeNasabah);
+    app.post('/pegawai',pekerjaan.createPegawai);
+    app.post('/mikro',pekerjaan.createMikro);
+
     app.post('/nasabah',nasabah.createNasabah);
+    
+    app.post('/uploadDokumen', uploadGambar.uploadDokumen)
     
     app.post('/uangmuka/jaminan',uangMuka.createJaminan);
     app.post('/uangmuka/cash',uangMuka.createCash);
     app.post('/uangmuka/tabemas',uangMuka.createTabEmas);
-    app.post('/uangmuka',uangMuka.createUangMuka);
     
     app.post('/cabang',cabang.createCabang);
+    app.get('/cabang/view',cabang.viewCabang);
+    app.get('/cabang/view/:cari',cabang.cariCabang);
     
+    app.get('/emas/user/:userid',emas.viewEmasUser);
+    app.get('/emas/konversi/:satuan',emas.viewEmasKonversi);
+
     app.post('/pengajuan',pengajuan.createPengajuan);
     app.post('/pengajuan/buatAngsuran',angsuran.createAngsuran);
     app.put('/pengajuan/verifikasi',pengajuan.verifikasiPengajuan);

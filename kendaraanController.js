@@ -27,18 +27,20 @@ exports.createKendaraanList = function (req, res) {
 };
 
 exports.createKendaraanNasabah = function (req, res) {
-    let kendaraan_id = uuidv4().slice(24,36);
-    let tipe_id = req.body.tipe_id;
-    let nomor_polisi = req.body.nomor_polisi;
-    let nama_pemilik = req.body.nama_pemilik;
-
-    let no_bpkb = req.body.no_bpkb;
-    let no_stnk = req.body.no_stnk;
-    let no_rangka = req.body.no_rangka;
-    let no_mesin = req.body.no_mesin;
-
-    connection.query('INSERT INTO kendaraan_nasabah(kendaraan_id, tipe_id, nomor_polisi, nama_pemilik, no_bpkb, no_stnk, no_rangka, no_mesin) VALUES (?,?,?,?,?,?,?,?)',
-        [kendaraan_id, tipe_id, nomor_polisi, nama_pemilik, no_bpkb, no_stnk, no_rangka, no_mesin],
+    let kendaraan_id= uuidv4().slice(24,36); 
+    let merk_id= req.body.merk_id 
+    let tipe= req.body.tipe 
+    let status= req.body.status 
+    let cc= req.body.cc 
+    let warna= req.body.warna 
+    let keterangan= req.body.keterangan 
+    let harga= req.body.harga 
+    let tahun= req.body.tahun 
+    let nobpkb= req.body.nobpkb 
+    let pengajuan_id= req.body.pengajuan_id
+    
+    connection.query('INSERT INTO kendaraan_nasabah(kendaraan_id, merk_id, tipe, status, cc, warna, keterangan, harga, tahun, nobpkb, pengajuan_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+        [kendaraan_id, merk_id, tipe, status, cc, warna, keterangan, harga, tahun, nobpkb, pengajuan_id],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
@@ -64,7 +66,21 @@ exports.createMerk = function (req, res) {
 };
 
 exports.viewMerk = function (req, res) {
-    connection.query('select * from merk',
+    let kategori = req.params.kategori;
+    connection.query('select * from merk where kategori = ?',[kategori],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.cariMerk = function (req, res) {
+    let kategori = req.params.kategori;
+    let cari = '%'+req.params.cari+'%';
+    connection.query('select * from merk where kategori = ? and nama like ?',[kategori,cari],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
@@ -80,6 +96,22 @@ exports.viewList = function (req, res) {
     
     connection.query('select DISTINCT tipe from kendaraan_list where merk_id = ? and status = ?',
         [merk_id, status],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.cariTipe = function (req, res) {
+    let merk_id = req.params.merk_id;
+    let status = req.params.status;
+    let cari = '%'+req.params.cari+'%';
+    
+    connection.query('select DISTINCT tipe from kendaraan_list where merk_id = ? and status = ? and tipe like ?',
+        [merk_id, status, cari],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
@@ -129,6 +161,7 @@ exports.viewDetailMerk = function (req, res) {
                 console.log(error)
             } else {
                 response.ok(rows, res)
+                // res.json(rows)
             }
         });
 };

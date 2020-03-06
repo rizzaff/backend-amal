@@ -2,24 +2,24 @@
 
 const response = require('./res');
 const connection = require('./conn');
-const uuidv4 = require('uuid/v4');
 
 exports.createPengajuan = function (req, res) {
+    let pengajuan_id= req.body.pengajuan_id 
+    let cabang_id= req.body.cabang_id 
+    let marhunbih= req.body.marhunbih 
+    let angsuran= req.body.angsuran 
+    let verifikasi= req.body.verifikasi 
+    let lunas= req.body.lunas 
+    let tgl_transaksi= req.body.tgl_transaksi 
+    let tenor= req.body.tenor 
+    let nasabah_id= req.body.nasabah_id 
+    let jenis_dp= req.body.jenis_dp 
+    let dp_id= req.body.dp_id 
+    let jenis_pekerjaan= req.body.jenis_pekerjaan 
+    let pekerjaan_id= req.body.pekerjaan_id
     
-    let pengajuan_id = uuidv4().slice(24,36);
-    let nasabah_id = req.body.nasabah_id;
-    let kendaraan_id = req.body.kendaraan_id;
-    let cabang_id = req.body.cabang_id;
-    let kondisi_kendaraan = req.body.kondisi_kendaraan;
-    let harga_pasaran = req.body.harga_pasaran;
-    let uangmuka_id = req.body.uangmuka_id;
-    let marhunbih = req.body.marhunbih;
-    let angsuran = req.body.angsuran;
-    let verifikasi = req.body.verifikasi;
-    let tenor = req.body.tenor;
-
-    connection.query('INSERT INTO pengajuan(pengajuan_id, nasabah_id, kendaraan_id, cabang_id, kondisi_kendaraan, harga_pasaran, uangmuka_id, marhunbih, angsuran, verifikasi, tgl_transaksi, tenor) VALUES (?,?,?,?,?,?,?,?,?,?,current_timestamp(),?)',
-        [pengajuan_id, nasabah_id, kendaraan_id, cabang_id, kondisi_kendaraan, harga_pasaran, uangmuka_id, marhunbih, angsuran, verifikasi, tenor],
+    connection.query('INSERT INTO pengajuan(pengajuan_id, cabang_id, marhunbih, angsuran, verifikasi, lunas, tgl_transaksi, tenor, nasabah_id, jenis_dp, dp_id, jenis_pekerjaan, pekerjaan_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        [pengajuan_id, cabang_id, marhunbih, angsuran, verifikasi, lunas, tgl_transaksi, tenor, nasabah_id, jenis_dp, dp_id, jenis_pekerjaan, pekerjaan_id],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)

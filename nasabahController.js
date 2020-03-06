@@ -78,26 +78,25 @@ exports.createTipeNasabah = function (req, res) {
 };
 
 exports.createNasabah = function (req, res) {
-    let nasabah_id = uuidv4().slice(24,36);
-    let nama = req.body.nama;
-    let tempat_lahir = req.body.tempat_lahir;
-    let tanggal_lahir = req.body.tanggal_lahir;
-    let jenis_kelamin = req.body.jenis_kelamin;
-    let status = req.body.status;
-    let nama_ibu = req.body.nama_ibu;
-    let no_ktp = req.body.no_ktp;
-    let foto_ktp = req.body.foto_ktp;
-    let alamat = req.body.alamat;
-    let provinsi = req.body.provinsi;
-    let kota = req.body.kota;
-    let kabupaten = req.body.kabupaten;
-    let kecamatan = req.body.kecamatan;
-    let kelurahan = req.body.kelurahan;
-    let tipenasabah_id = req.body.tipenasabah_id;
-    let user_id = req.body.user_id;
-
-    connection.query('INSERT INTO nasabah(nasabah_id, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, status, nama_ibu, no_ktp, foto_ktp, alamat, provinsi, kota, kabupaten, kecamatan, kelurahan, tipenasabah_id,user_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-        [nasabah_id, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, status, nama_ibu, no_ktp, foto_ktp, alamat, provinsi, kota, kabupaten, kecamatan, kelurahan, tipenasabah_id, user_id],
+    let nasabah_id = req.body.nasabah_id; 
+    let nama = req.body.nama 
+    let tempat_lahir = req.body.tempat_lahir 
+    let tanggal_lahir = req.body.tanggal_lahir 
+    let jenis_kelamin = req.body.jenis_kelamin 
+    let status= req.body.status 
+    let nama_ibu= req.body.nama_ibu 
+    let no_ktp= req.body.no_ktp 
+    let alamat= req.body.alamat 
+    let provinsi= req.body.provinsi 
+    let kota= req.body.kota 
+    let kecamatan= req.body.kecamatan 
+    let kelurahan= req.body.kelurahan 
+    let email= req.body.email 
+    let no_hp= req.body.no_hp 
+    let user_id= req.body.user_id
+    
+    connection.query('INSERT INTO nasabah(nasabah_id, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, status, nama_ibu, no_ktp, alamat, provinsi, kota, kecamatan, kelurahan, email, no_hp, user_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        [nasabah_id, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, status, nama_ibu, no_ktp, alamat, provinsi, kota, kecamatan, kelurahan, email, no_hp, user_id],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
