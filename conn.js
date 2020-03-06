@@ -13,7 +13,8 @@ const con = mysql.createConnection({
   host : 'sql12.freemysqlhosting.net',
   user : 'sql12326266',
   password : 'jYEkivAZW3',
-  database : 'sql12326266'
+  database : 'sql12326266',
+  port : '3306'
 
   //local
   // host : 'localhost',
