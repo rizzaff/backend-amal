@@ -11,9 +11,9 @@ const con = mysql.createConnection({
   
   //deploy
   host : 'sql12.freemysqlhosting.net',
-  user : 'sql12326266',
-  password : 'jYEkivAZW3',
-  database : 'sql12326266',
+  user : 'sql12326992',
+  password : 'dZQTES4dHs',
+  database : 'sql12326992',
   // port : '3306'
 
   //local

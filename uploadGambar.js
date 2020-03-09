@@ -19,7 +19,7 @@ exports.uploadDokumen =(req, res, next) => {
       cloudinary.config();  
       const file = dataUri(req).content;
   
-      cloudinary.uploader.upload(file).then(result => {
+      cloudinary.uploader.upload(file, function(error, result) {console.log(error)}).then(result => {
         const image = result.url;
         res.json(image)
     })
