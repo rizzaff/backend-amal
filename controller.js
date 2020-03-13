@@ -81,10 +81,11 @@ exports.pembayaranGcash = function (req, res) {
     let cash_out = req.body.cash_out;
     let tgl_payment = NOW();
     let jenis_transaksi = req.body.jenis_transaksi;
-    let nasabah_id = req.body.nasabah_id;
+    let user_id = req.body.user_id;
+    let status = "Lunas";
     
-    connection.query('INSERT INTO history_gcash (gcash_id, nomor_gcash, cash_in, cash_out, tgl_payment, jenis_transaksi, nasabah_id) VALUES (?,?,?,?,?,?,?)',
-        [gcash_id,nomor_gcash,cash_in,cash_out,tgl_payment,jenis_transaksi,nasabah_id],
+    connection.query('INSERT INTO history_gcash (gcash_id, nomor_gcash, cash_in, cash_out, tgl_payment, jenis_transaksi, user_id, status) VALUES (?,?,?,?,?,?,?,?)',
+        [gcash_id,nomor_gcash,cash_in,cash_out,tgl_payment,jenis_transaksi,user_id,status],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
@@ -96,7 +97,7 @@ exports.pembayaranGcash = function (req, res) {
                     cash_out : cash_out,
                     tgl_payment : tgl_payment,
                     jenis_transaksi : jenis_transaksi,
-                    nasabah_id : nasabah_id,
+                    user_id : user_id,
                   }]
                 response.ok(data, res)
             }
@@ -104,11 +105,11 @@ exports.pembayaranGcash = function (req, res) {
 };
 
 exports.getGcashBalance = function (req, res) {
-    let nasabah_id = req.body.nasabah_id;
+    let user_id = req.body.user_id;
     let nomor_gcash = req.body.nomor_gcash;
 
-    connection.query('SELECT (SUM(a.cash_in)-SUM(a.cash_out)) AS balance, a.nomor_gcash, a.nasabah_id, b.nama FROM history_gcash a JOIN nasabah b ON b.nasabah_id = a.nasabah_id WHERE a.nasabah_id = ? AND a.nomor_gcash = ?',
-    [nasabah_id,nomor_gcash],
+    connection.query('SELECT (SUM(a.cash_in)-SUM(a.cash_out)) AS balance, a.nomor_gcash, a.user_id, b.nama FROM history_gcash a join user u on u.user_id = a.user_id JOIN nasabah b ON b.user_id = u.user_id  WHERE a.user_id = ? AND a.nomor_gcash = ?',
+    [user_id,nomor_gcash],
     function(error,rows, fields){
         if(error){
             console.log(error)
@@ -153,23 +154,24 @@ exports.PembentukanNomorGcash = function (req, res){
     let cash_out = 0;
     let tgl_payment = NOW();
     let jenis_transaksi = "Pembentukan Nomor GCash";
-    let nasabah_id = req.body.nasabah_id;
+    let user_id = req.body.user_id;
+    let status = "Lunas";
 
     /* Begin transaction */
     connection.beginTransaction(function(err) {
         if (err) { 
             throw err; 
         }
-        connection.query('INSERT INTO gcash (nasabah_id, nama, ibu_kandung, tgl_lahir, nomor_hp, bank, no_rekening, nomor_gcash) VALUES (?,?,?,?,?,?,?,?)',
-        [nasabah_id,nama,ibuKandung,tglLahir,nomorHp,bank,noRekening,nomor_gcash], 
+        connection.query('INSERT INTO gcash (user_id, nama, ibu_kandung, tgl_lahir, nomor_hp, bank, no_rekening, nomor_gcash) VALUES (?,?,?,?,?,?,?,?)',
+        [user_id,nama,ibuKandung,tglLahir,nomorHp,bank,noRekening,nomor_gcash], 
         function(err, result) {
             if (err) { 
                 connection.rollback(function() {
                     throw err;
                 });
             }  
-            connection.query('INSERT INTO history_gcash (gcash_id, nomor_gcash, cash_in, cash_out, tgl_payment, jenis_transaksi, nasabah_id) VALUES (?,?,?,?,?,?,?)',
-            [gcash_id,nomor_gcash,cash_in,cash_out,tgl_payment,jenis_transaksi,nasabah_id], 
+            connection.query('INSERT INTO history_gcash (gcash_id, nomor_gcash, cash_in, cash_out, tgl_payment, jenis_transaksi, user_id) VALUES (?,?,?,?,?,?,?)',
+            [gcash_id,nomor_gcash,cash_in,cash_out,tgl_payment,jenis_transaksi,user_id,status], 
             function(err, result) {
                 if (err) { 
                     connection.rollback(function() {
@@ -194,10 +196,9 @@ exports.PembentukanNomorGcash = function (req, res){
                         nomor_gcash : nomor_gcash,
                         tgl_payment : tgl_payment,
                         jenis_transaksi : jenis_transaksi,
-                        nasabah_id : nasabah_id,
+                        user_id : user_id,
                     }]
                     response.ok(data, res)
-                    connection.end();
                 });
             });
         });
@@ -206,15 +207,16 @@ exports.PembentukanNomorGcash = function (req, res){
 
 exports.getHistoryGCash = function (req, res) {
     let nomor_gcash = req.body.nomor_gcash;
-    let nasabah_id = req.body.nasabah_id;
+    let user_id = req.body.user_id;
     
-    connection.query(`SELECT * FROM history_gcash WHERE nomor_gcash = ? and nasabah_id = ?`,
-        [nomor_gcash,nasabah_id],
+    connection.query(`SELECT * FROM history_gcash WHERE nomor_gcash = ? and user_id = ?`,
+        [nomor_gcash,user_id],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
             } else {
                 response.ok(rows, res)
+                console.log(this.sql)
             }
     })
 };
@@ -332,7 +334,6 @@ exports.createInquiryVA = function(req,res){
                                     }]  
                                 response.ok(data, res)
                                 console.log('Transaction Complete.');
-                                connection.end();
                         });
                     });
                 });
@@ -354,7 +355,7 @@ exports.createInquiryGC = function(req,res){
     let tgl_pembayaran = NOW();
     let penyedia_layanan = req.body.penyedia_layanan;
     let jenis_transaksi = req.body.jenis_transaksi;
-    let nasabah_id = req.body.nasabah_id;
+    let user_id = req.body.user_id;
     let status_angsuran = "Lunas";
     let amount = req.body.amount;
     let gcash_id = uuidv4().slice(24,36);
@@ -374,8 +375,8 @@ exports.createInquiryGC = function(req,res){
             }
             console.log("====== Query 1 pass =======");
             
-            connection.query('INSERT INTO history_gcash (gcash_id,nomor_gcash,cash_in,cash_out,tgl_payment,jenis_transaksi,nasabah_id,status) VALUES (?,?,?,?,?,?,?,?)',
-                [gcash_id,nomor_gcash,cash_in,amount,tgl_pembayaran,jenis_transaksi,nasabah_id,status_angsuran],
+            connection.query('INSERT INTO history_gcash (gcash_id,nomor_gcash,cash_in,cash_out,tgl_payment,jenis_transaksi,user_id,status) VALUES (?,?,?,?,?,?,?,?)',
+                [gcash_id,nomor_gcash,cash_in,amount,tgl_pembayaran,jenis_transaksi,user_id,status_angsuran],
                 function(err, result) {
                 if (err) { 
                     connection.rollback(function() {
@@ -412,12 +413,11 @@ exports.createInquiryGC = function(req,res){
                                         tgl_pembayaran : tgl_pembayaran,
                                         penyedia_layanan : penyedia_layanan,
                                         jenis_transaksi : jenis_transaksi,
-                                        nasabah_id : nasabah_id,
+                                        user_id : user_id,
                                         
                                     }]  
                                 response.ok(data, res)
                                 console.log('Transaction Complete.');
-                                connection.end();
                         });
                     });
                 });
@@ -514,7 +514,6 @@ exports.createInquiryTF = function(req,res){
                                     }]  
                                 response.ok(data, res)
                                 console.log('Transaction Complete.');
-                                connection.end();
                         });
                     });
                 });
@@ -575,7 +574,6 @@ exports.pembayaranTransfer = function (req, res) {
                         bank : bank,
                     }]
                     response.ok(data, res)
-                    connection.end();
                 });
             });
         });
@@ -632,7 +630,6 @@ exports.pembayaranVA = function (req, res) {
                         bank : bank,
                     }]
                     response.ok(data, res)
-                    connection.end();
                 });
             });
         });
