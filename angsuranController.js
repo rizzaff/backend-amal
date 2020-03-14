@@ -44,6 +44,7 @@ exports.createAngsuran = async function (req, res) {
     connection.query('INSERT INTO angsuran(angsuran_id, pengajuan_id, status, tgl_jatuhtempo, urutan_angsuran, jenispembayaran_id, amount, tgl_pembayaran) VALUES ?',
         [inserts],
         function (error, rows, fields) {
+            console.log(this.sql)
             if (error) {
                 console.log(error)
             } else {
