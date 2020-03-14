@@ -10,10 +10,17 @@ const con = mysql.createConnection({
   // database : process.env.DB_NAME || 'amal'
   
   //deploy
-  host : 'sql12.freemysqlhosting.net',
-  user : 'sql12326992',
-  password : 'dZQTES4dHs',
-  database : 'sql12326992',
+  // host : 'sql12.freemysqlhosting.net',
+  // user : 'sql12326992',
+  // password : 'dZQTES4dHs',
+  // database : 'sql12326992',
+  // port : '3306'
+
+    //deploy remotemysql
+  host : 'remotemysql.com',
+  user : 'mkDYOUXUH4',
+  password : 'JOsnCvxivZ',
+  database : 'mkDYOUXUH4',
   // port : '3306'
 
   //local

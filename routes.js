@@ -9,9 +9,12 @@ module.exports = function(app) {
     const pekerjaan = require('./pekerjaanController');
     const uangMuka = require('./uangMukaController');
     const pengajuan = require('./pengajuanController');
+    const journey = require('./journeyController');
     const angsuran = require('./angsuranController');
     const auth = require('./authController');
     const uploadGambar = require('./uploadGambar');
+    const pembayaran = require('./pembayaranController');
+    const gcash = require('./gcashController');
 
     app.post('/',todoList.index);
     
@@ -36,7 +39,12 @@ module.exports = function(app) {
     // app.post('/kendaraan',todoList.showKendaraan); 
     // app.post('/kendaraan/:kendaraanID',todoList.showKendaraanById);
     // app.put('/kendaraan/:kendaraanID',todoList.updateKendaraan);
-    
+
+    app.post('/pembayaran/inquiryva', pembayaran.createInquiryVA);
+    app.post('/pembayaran/inquirygc', pembayaran.createInquiryGC);
+
+    app.post('/gcash/getbalance', pembayaran.getGcashBalance);
+
     app.get('/kendaraan/merk/:kategori',kendaraan.viewMerk);
     app.get('/kendaraan/merk/cari/:kategori/:cari',kendaraan.cariMerk);
     app.get('/kendaraan/merk/detail/:merkId',kendaraan.viewDetailMerk);
@@ -67,7 +75,15 @@ module.exports = function(app) {
     
     app.get('/emas/user/:userid',emas.viewEmasUser);
     app.get('/emas/konversi/:satuan',emas.viewEmasKonversi);
-
+    
+    app.get('/pengajuan/:user_id',pengajuan.viewPengajuan);
+    
+    app.post('/pengajuan/verifikasi',pengajuan.verifikasiPengajuan);
+    
+    app.get('/gcash/:user_id',gcash.viewGcash);
+    
+    app.get('/journey/:user_id',journey.viewJourney);
+    
     app.post('/pengajuan',pengajuan.createPengajuan);
     app.post('/pengajuan/buatAngsuran',angsuran.createAngsuran);
     app.put('/pengajuan/verifikasi',pengajuan.verifikasiPengajuan);

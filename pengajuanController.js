@@ -29,6 +29,22 @@ exports.createPengajuan = function (req, res) {
         });
 };
 
+exports.viewPengajuan = function (req, res) {
+    let user_id = req.params.user_id;
+    
+    connection.query('select p.jenis_pekerjaan,n.nama as nmnasabah, p.verifikasi, p.lunas, p.tenor, kn.harga, p.marhunbih, p.angsuran, c.nama as nmcabang, m.nama as merk, kn.tipe, kn.status, kn.warna from pengajuan p join nasabah n on (p.nasabah_id = n.nasabah_id) join kendaraan_nasabah kn on(kn.pengajuan_id = p.pengajuan_id) join merk m on(m.merk_id=kn.merk_id) join cabang c on(c.cabang_id = p.cabang_id) where n.user_id=?',
+    [user_id],
+        function (error, rows, fields) {
+            // console.log(this.sql)
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+        
+};
+
 exports.verifikasiPengajuan = function (req, res) {
     
     let pengajuan_id = req.body.pengajuan_id;
