@@ -45,6 +45,7 @@ module.exports = function(app) {
 
     app.post('/gcash/getbalance', pembayaran.getGcashBalance);
     app.post('/gcash/create', pembayaran.PembentukanNomorGcash);
+    app.post('/gcash/transaksi', pembayaran.pembayaranGcash);
 
     app.get('/kendaraan/merk/:kategori',kendaraan.viewMerk);
     app.get('/kendaraan/merk/cari/:kategori/:cari',kendaraan.cariMerk);
