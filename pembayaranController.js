@@ -155,6 +155,7 @@ exports.PembentukanNomorGcash = function (req, res){
     let tgl_payment = NOW();
     let jenis_transaksi = "Pembentukan Nomor GCash";
     let user_id = req.body.user_id;
+    let pin = req.body.pin;
     let status = "Lunas";
 
     /* Begin transaction */
@@ -162,8 +163,8 @@ exports.PembentukanNomorGcash = function (req, res){
         if (err) { 
             throw err; 
         }
-        connection.query('INSERT INTO gcash (user_id, nama, ibu_kandung, tgl_lahir, nomor_hp, bank, no_rekening, nomor_gcash) VALUES (?,?,?,?,?,?,?,?)',
-        [user_id,nama,ibuKandung,tglLahir,nomorHp,bank,noRekening,nomor_gcash], 
+        connection.query('INSERT INTO gcash (user_id, nama, ibu_kandung, tgl_lahir, nomor_hp, bank, no_rekening, nomor_gcash,pin) VALUES (?,?,?,?,?,?,?,?,?)',
+        [user_id,nama,ibuKandung,tglLahir,nomorHp,bank,noRekening,nomor_gcash,pin], 
         function(err, result) {
             if (err) { 
                 connection.rollback(function() {
