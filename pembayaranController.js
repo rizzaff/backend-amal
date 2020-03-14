@@ -265,11 +265,11 @@ exports.createInquiryVA = function(req,res){
       nomorHp_parse = nomorHp_parse + "8"; 
     }
 
-    if(bank = "009"){
+    if(bank == "009"){
         vaUniqcode = "555";
-    } else if (bank = "002"){
+    } else if (bank == "002"){
         vaUniqcode = "444";
-    } else if (bank = "008"){
+    } else if (bank == "008"){
         vaUniqcode = "333";
     } else {
         vaUniqcode = "222";
