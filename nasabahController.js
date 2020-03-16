@@ -133,6 +133,7 @@ exports.viewKendaraanNasabah = function (req, res) {
     let nasabah_id = req.query.nasabah_id;
     connection.query(`select p.jenis_dp, p.jenis_pekerjaan,m.nama as merk, m.kategori, k.tipe, k.status, k.warna, k.harga, k.cc, k.keterangan, k.tahun from kendaraan_nasabah k join pengajuan p on (k.pengajuan_id=p.pengajuan_id) join nasabah n on(n.nasabah_id=p.nasabah_id) join merk m on(m.merk_id=k.merk_id) where n.nasabah_id='${nasabah_id}'`,
         function (error, rows, fields) {
+            console.log(this.sql)
             if (error) {
                 console.log(error)
             } else {
