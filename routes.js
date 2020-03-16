@@ -67,7 +67,7 @@ module.exports = function(app) {
     
     app.get('/nasabah',nasabah.viewNasabahList);
     app.get('/nasabah/:nasabah_id',nasabah.viewNasabahDetail);
-    app.get('/nasabah/kendaraan/:nasabah_id',nasabah.viewKendaraanNasabah);
+    app.get('/nasabah/kendaraan',nasabah.viewKendaraanNasabah);
     app.get('/nasabah/cash/:nasabah_id',nasabah.viewDpCash);
     app.get('/nasabah/emas/:nasabah_id',nasabah.viewDpEmas);
     app.get('/nasabah/jaminan/:nasabah_id',nasabah.viewDpJaminan);
