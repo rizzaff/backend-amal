@@ -65,6 +65,15 @@ module.exports = function(app) {
 
     app.post('/nasabah',nasabah.createNasabah);
     
+    app.get('/nasabah',nasabah.viewNasabahList);
+    app.get('/nasabah/:nasabah_id',nasabah.viewNasabahDetail);
+    app.get('/nasabah/kendaraan/:nasabah_id',nasabah.viewKendaraanNasabah);
+    app.get('/nasabah/cash/:nasabah_id',nasabah.viewDpCash);
+    app.get('/nasabah/emas/:nasabah_id',nasabah.viewDpEmas);
+    app.get('/nasabah/jaminan/:nasabah_id',nasabah.viewDpJaminan);
+    app.get('/nasabah/mikro/:nasabah_id',nasabah.viewMikro);
+    app.get('/nasabah/pegawai/:nasabah_id',nasabah.viewPegawai);
+    
     app.post('/uploadDokumen', uploadGambar.uploadDokumen)
     
     app.post('/uangmuka/jaminan',uangMuka.createJaminan);

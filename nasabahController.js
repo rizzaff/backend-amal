@@ -105,3 +105,98 @@ exports.createNasabah = function (req, res) {
             }
         });
 };
+
+exports.viewNasabahList = function (req, res) {
+    connection.query('select nasabah_id,nama from nasabah',
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.viewNasabahDetail = function (req, res) {
+    let nasabah_id = req.params.nasabah_id;
+    connection.query('select * from nasabah where nasabah_id=?',[nasabah_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.viewKendaraanNasabah = function (req, res) {
+    let nasabah_id = req.params.nasabah_id;
+    connection.query('select p.jenis_dp, p.jenis_pekerjaan,m.nama as merk, m.kategori, k.tipe, k.status, k.warna, k.harga, k.cc, k.keterangan, k.tahun from kendaraan k join pengajuan p on (k.pengajuan_id=p.pengajuan_id) join nasabah n on(n.nasabah_id=p.nasabah_id) join merk m on(m.merk_id=k.merk_id) where n.nasabah_id=?',[nasabah_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.viewDpCash = function (req, res) {
+    let nasabah_id = req.params.nasabah_id;
+    connection.query('select c.* from dpcash c join pengajuan p on (p.dp_id=c.cash_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=?',[nasabah_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.viewDpEmas = function (req, res) {
+    let nasabah_id = req.params.nasabah_id;
+    connection.query('select e.* from dptabemas e join pengajuan p on (p.dp_id=e.dptabemas_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=?',[nasabah_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.viewDpJaminan = function (req, res) {
+    let nasabah_id = req.params.nasabah_id;
+    connection.query('select j.* from dpjaminan j join pengajuan p on (p.dp_id=j.jaminan_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=?',[nasabah_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.viewMikro = function (req, res) {
+    let nasabah_id = req.params.nasabah_id;
+    connection.query('select m.* from mikro m join pengajuan p on (p.pekerjaan_id=m.mikro_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=?',[nasabah_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.viewPegawai = function (req, res) {
+    let nasabah_id = req.params.nasabah_id;
+    connection.query('select pg.* from pegawai pg join pengajuan p on (p.pekerjaan_id=pg.pegawai_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=?',[nasabah_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
