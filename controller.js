@@ -3,6 +3,7 @@
 const response = require('./res');
 const connection = require('./conn');
 const uuidv4 = require('uuid/v4');
+const Request = require("request");
 
 exports.index = function (req, res) {
     // console.log("ID: " + uuidv4())
@@ -372,3 +373,96 @@ exports.topUpDompet = function (req, res) {
         [customerID, angsuran, customerID],
     );
 };
+
+function autoDebit() {
+    connection.connect(function (err) {
+        connection.query("SELECT n.nasabah_id, n.user_id, p.pengajuan_id, a.angsuran_id, p.angsuran, g.nomor_gcash, DATE_FORMAT(a.tgl_jatuhtempo,'%Y-%m-%d') as tgl_jatuhtempo, DATE_FORMAT(curdate(),'%Y-%m-%d') as today FROM nasabah n join gcash g on n.user_id = g.user_id  join pengajuan p on p.nasabah_id = n.nasabah_id join angsuran a on a.pengajuan_id = p.pengajuan_id where g.autodebet = '1' and a.status='Belum Bayar' group by n.user_id order by a.tgl_jatuhtempo asc;", function (err, result, fields) {
+            if (err) throw err;
+            for (let i = 0; i < result.length; i++) {
+                let jatuhtempo = result[i].tgl_jatuhtempo;
+                let today = result[i].today;
+                let angsuran = result[i].angsuran;
+                let user_id = result[i].user_id;
+                let nomor_gcash = result[i].nomor_gcash;
+                console.log("hari ini : " + today);
+                console.log("jatuh tempo : " + jatuhtempo);
+                console.log("angsuran : " + angsuran);
+                console.log("user_id : " + user_id);
+                console.log("nomor_gcash : " + nomor_gcash);
+                if (today == jatuhtempo) {
+                  console.log("waktunya bayar");
+                  Request.post({
+                      "headers": { "content-type": "application/json" },
+                      "url": "http://localhost:3000/gcash/getbalance",
+                      "body": JSON.stringify({
+                        "user_id" : user_id,
+                        "nomor_gcash" : nomor_gcash
+                      })
+                  }, (error, response, body) => {
+                      if (error) {
+                          return console.dir(error);
+                      }
+                      var data = JSON.parse(body);
+
+                      for (var i = 0; i < data.values.length; i++) {
+                        var balance = data.values[i].balance;
+                        var user_id = data.values[i].user_id;
+                        console.log(balance);
+                        console.log(user_id);
+
+                        if (balance >= angsuran) {
+                           console.log("bayar, balance >= angsuran");
+
+                           Request.post({
+                                "headers": { "content-type": "application/json" },
+                                "url": "http://localhost:3000/pembayaran/getpembayaran",
+                                "body": JSON.stringify({
+                                    "user_id": user_id
+                                })
+                            }, (error, response, body) => {
+                                if(error) {
+                                    return console.dir(error);
+                                }
+                                var data2 = JSON.parse(body);
+                                for (var a = 0; a < data2.values.length; a++) {
+                                  var angsuran = data2.values[a].angsuran;
+                                  var angsuran_id = data2.values[a].angsuran_id;
+
+                                  Request.post({
+                                      "headers": { "content-type": "application/json" },
+                                      "url": "http://localhost:3000/pembayaran/inquirygc",
+                                      "body": JSON.stringify({
+                                          "amount" : angsuran,
+                                          "angsuran_id" : angsuran_id,
+                                          "penyedia_layanan" : "PT Pegadaian Persero",
+                                          "jenis_transaksi" : "Angsuran Amanah",
+                                          "nomor_gcash" : nomor_gcash,
+                                          "user_id" : user_id
+                                      })
+                                  }, (error, response, body) => {
+                                      if(error) {
+                                          return console.dir(error);
+                                      }
+                                      console.dir(JSON.parse(body));
+                                  });
+                                }
+                            })
+
+                        } else {
+                          console.log("tidak bisa bayar, balance < angsuran");
+                        }
+                      }
+                  });
+                } else {
+                    console.log("bukan waktunya bayar");
+                }
+            }
+        });
+    });
+}
+
+var cron = require('node-cron');
+cron.schedule('59 21 * * *', () => {
+  console.log('running a task every minute');
+  autoDebit();
+});

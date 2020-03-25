@@ -43,7 +43,7 @@ exports.index = function (req, res) {
 exports.getPembayaranAngsuran = function (req, res) {
     let user_id = req.body.user_id;
     
-    connection.query(`SELECT c.nama, c.nasabah_id, c.user_id, a.tgl_jatuhtempo, a.status, a.urutan_angsuran, b.angsuran, b.pengajuan_id FROM angsuran a JOIN pengajuan b ON b.pengajuan_id = a.pengajuan_id  JOIN nasabah c ON b.nasabah_id = c.nasabah_id WHERE c.user_id = ? AND a.status = 'Belum Bayar' ORDER BY tgl_jatuhtempo ASC LIMIT 1`,
+    connection.query(`SELECT c.nama, c.nasabah_id, c.user_id, a.tgl_jatuhtempo, a.status, a.urutan_angsuran, b.angsuran, a.angsuran_id, b.pengajuan_id FROM angsuran a JOIN pengajuan b ON b.pengajuan_id = a.pengajuan_id  JOIN nasabah c ON b.nasabah_id = c.nasabah_id WHERE c.user_id = ? AND a.status = 'Belum Bayar' ORDER BY tgl_jatuhtempo ASC LIMIT 1`,
         [user_id],
         function (error, rows, fields) {
             if (error) {

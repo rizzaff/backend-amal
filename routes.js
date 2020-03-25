@@ -39,7 +39,7 @@ module.exports = function(app) {
     // app.post('/kendaraan',todoList.showKendaraan); 
     // app.post('/kendaraan/:kendaraanID',todoList.showKendaraanById);
     // app.put('/kendaraan/:kendaraanID',todoList.updateKendaraan);
-
+    app.post('/pembayaran/getpembayaran', pembayaran.getPembayaranAngsuran);
     app.post('/pembayaran/inquiryva', pembayaran.createInquiryVA);
     app.post('/pembayaran/inquirygc', pembayaran.createInquiryGC);
 
