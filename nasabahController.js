@@ -107,7 +107,7 @@ exports.createNasabah = function (req, res) {
 };
 
 exports.viewNasabahList = function (req, res) {
-    connection.query('select nasabah_id,nama from nasabah',
+    connection.query('select n.nasabah_id,nama from nasabah n join pengajuan p on (n.nasabah_id=p.nasabah_id) where verifikasi=false and tolak=false',
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
@@ -130,10 +130,10 @@ exports.viewNasabahDetail = function (req, res) {
 };
 
 exports.viewKendaraanNasabah = function (req, res) {
-    let nasabah_id = req.query.nasabah_id;
-    connection.query(`select p.jenis_dp, p.jenis_pekerjaan,m.nama as merk, m.kategori, k.tipe, k.status, k.warna, k.harga, k.cc, k.keterangan, k.tahun from kendaraan_nasabah k join pengajuan p on (k.pengajuan_id=p.pengajuan_id) join nasabah n on(n.nasabah_id=p.nasabah_id) join merk m on(m.merk_id=k.merk_id) where n.nasabah_id='${nasabah_id}'`,
+    let nasabah_id = req.body.nasabah_id;
+    connection.query('select c.nama as cabang, p.pengajuan_id, p.jenis_dp,p.angsuran, p.jenis_pekerjaan, p.tenor, p.marhunbih, m.nama as merk,m.negara, m.kategori, k.tipe, k.status, k.warna, k.harga, k.cc, k.keterangan, k.tahun from kendaraan_nasabah k join pengajuan p on (k.pengajuan_id=p.pengajuan_id) join nasabah n on(n.nasabah_id=p.nasabah_id) join merk m on(m.merk_id=k.merk_id) join cabang c on (c.cabang_id=p.cabang_id) where n.nasabah_id=? and p.verifikasi=false',[nasabah_id],
         function (error, rows, fields) {
-            console.log(this.sql)
+            console.log(error)
             if (error) {
                 console.log(error)
             } else {
@@ -143,9 +143,10 @@ exports.viewKendaraanNasabah = function (req, res) {
 };
 
 exports.viewDpCash = function (req, res) {
-    let nasabah_id = req.params.nasabah_id;
+    let nasabah_id = req.body.nasabah_id;
     connection.query('select c.* from dpcash c join pengajuan p on (p.dp_id=c.cash_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=?',[nasabah_id],
         function (error, rows, fields) {
+            // console.log(this.sql)
             if (error) {
                 console.log(error)
             } else {
@@ -155,7 +156,7 @@ exports.viewDpCash = function (req, res) {
 };
 
 exports.viewDpEmas = function (req, res) {
-    let nasabah_id = req.params.nasabah_id;
+    let nasabah_id = req.body.nasabah_id;
     connection.query('select e.* from dptabemas e join pengajuan p on (p.dp_id=e.dptabemas_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=?',[nasabah_id],
         function (error, rows, fields) {
             if (error) {
@@ -167,9 +168,10 @@ exports.viewDpEmas = function (req, res) {
 };
 
 exports.viewDpJaminan = function (req, res) {
-    let nasabah_id = req.params.nasabah_id;
+    let nasabah_id = req.body.nasabah_id;
     connection.query('select j.* from dpjaminan j join pengajuan p on (p.dp_id=j.jaminan_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=?',[nasabah_id],
         function (error, rows, fields) {
+            console.log(this.sql)
             if (error) {
                 console.log(error)
             } else {
@@ -179,8 +181,8 @@ exports.viewDpJaminan = function (req, res) {
 };
 
 exports.viewMikro = function (req, res) {
-    let nasabah_id = req.params.nasabah_id;
-    connection.query('select m.* from mikro m join pengajuan p on (p.pekerjaan_id=m.mikro_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=?',[nasabah_id],
+    let nasabah_id = req.body.nasabah_id;
+    connection.query('select m.* from mikro m join pengajuan p on (p.pekerjaan_id=m.mikro_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=? and p.verifikasi=false',[nasabah_id],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
@@ -191,8 +193,23 @@ exports.viewMikro = function (req, res) {
 };
 
 exports.viewPegawai = function (req, res) {
-    let nasabah_id = req.params.nasabah_id;
-    connection.query('select pg.* from pegawai pg join pengajuan p on (p.pekerjaan_id=pg.pegawai_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=?',[nasabah_id],
+    let nasabah_id = req.body.nasabah_id;
+    connection.query('select pg.* from pegawai pg join pengajuan p on (p.pekerjaan_id=pg.pegawai_id) join nasabah n on(n.nasabah_id=p.nasabah_id) where n.nasabah_id=? and p.verifikasi=false',[nasabah_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.hapusNasabah = function (req, res) {
+    
+    let nasabah_id = req.body.nasabah_id;
+    
+    connection.query('delete from nasabah WHERE nasabah_id = ?',
+        [nasabah_id],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)

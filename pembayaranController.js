@@ -108,9 +108,10 @@ exports.getGcashBalance = function (req, res) {
     let user_id = req.body.user_id;
     let nomor_gcash = req.body.nomor_gcash;
 
-    connection.query('SELECT (SUM(a.cash_in)-SUM(a.cash_out)) AS balance, a.nomor_gcash, a.user_id, b.nama FROM history_gcash a join user u on u.user_id = a.user_id JOIN nasabah b ON b.user_id = u.user_id  WHERE a.user_id = ? AND a.nomor_gcash = ? group by a.nomor_gcash, a.user_id, b.nama',
+    connection.query('SELECT (SUM(a.cash_in)-SUM(a.cash_out)) AS balance, a.nomor_gcash, a.user_id, u.nama FROM history_gcash a join user u on u.user_id = a.user_id WHERE a.user_id = ? AND a.nomor_gcash = ? group by a.nomor_gcash, a.user_id, u.nama',
     [user_id,nomor_gcash],
     function(error,rows, fields){
+        // console.log(this.sql)
         if(error){
             console.log(error)
         } else {

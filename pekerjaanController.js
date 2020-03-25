@@ -63,3 +63,34 @@ exports.createMikro = function (req, res) {
             }
         });
 };
+
+exports.hapusPegawai = function (req, res) {
+    
+    let pekerjaan_id = req.body.pekerjaan_id;
+    
+    connection.query('delete from pegawai WHERE pegawai_id = ?',
+        [pekerjaan_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.hapusMikro = function (req, res) {
+    
+    let pekerjaan_id = req.body.pekerjaan_id;
+    
+    connection.query('delete from mikro WHERE mikro_id = ?',
+        [pekerjaan_id],
+        function (error, rows, fields) {
+            console.log(this.sql)
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};

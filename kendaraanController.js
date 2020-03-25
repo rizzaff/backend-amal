@@ -65,6 +65,20 @@ exports.createMerk = function (req, res) {
         });
 };
 
+exports.inputBpkb = function (req, res) {
+    let pengajuan_id = req.body.pengajuan_id;
+    let bpkb = req.body.bpkb;
+    connection.query('UPDATE kendaraan_nasabah SET nobpkb=? where pengajuan_id=?',
+        [bpkb, pengajuan_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
 exports.viewMerk = function (req, res) {
     let kategori = req.params.kategori;
     connection.query('select * from merk where kategori = ?',[kategori],
@@ -180,3 +194,18 @@ exports.viewDetailMerk = function (req, res) {
 //             }
 //         });
 // };
+
+exports.hapusKendaraanNasabah = function (req, res) {
+    
+    let pengajuan_id = req.body.pengajuan_id;
+    
+    connection.query('delete from kendaraan_nasabah WHERE pengajuan_id = ?',
+        [pengajuan_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};

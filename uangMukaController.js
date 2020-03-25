@@ -60,3 +60,48 @@ exports.createTabEmas = function (req, res) {
             }
         });
 };
+
+exports.hapusCash = function (req, res) {
+    
+    let dp_id = req.body.dp_id;
+    
+    connection.query('delete from dpcash WHERE cash_id = ?',
+        [dp_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.hapusJaminan = function (req, res) {
+    
+    let dp_id = req.body.dp_id;
+    
+    connection.query('delete from dpjaminan WHERE jaminan_id = ?',
+        [dp_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+exports.hapusTabEmas = function (req, res) {
+    
+    let dp_id = req.body.dp_id;
+    
+    connection.query('delete from dptabemas WHERE dptabemas_id = ?',
+        [dp_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};

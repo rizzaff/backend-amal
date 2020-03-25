@@ -52,3 +52,18 @@ exports.createAngsuran = async function (req, res) {
             }
         });
 };
+
+exports.hapusAngsuran = function (req, res) {
+    
+    let pengajuan_id = req.body.pengajuan_id;
+    
+    connection.query('delete from angsuran WHERE pengajuan_id = ?',
+        [pengajuan_id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};

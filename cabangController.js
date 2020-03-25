@@ -32,6 +32,20 @@ exports.viewCabang = function (req, res) {
         });
 };
 
+exports.viewCabangTerdekat = function (req, res) {
+    let lat = req.body.lat;
+    let long = req.body.long;
+    connection.query(`SELECT *, (6371 * acos (cos ( radians(${lat}) )* cos( radians( CAST(latitude as DECIMAL(9,2)) ) )* cos( radians( CAST(longitude as DECIMAL(9,2)) ) - radians(${long}) )+ sin ( radians(${lat}) )* sin( radians( CAST(latitude as DECIMAL(9,2)) ) ))) AS distance FROM cabang HAVING distance < 30 ORDER BY distance LIMIT 10`,
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
+
 exports.cariCabang = function (req, res) {
     let cari = '%'+req.params.cari+'%';
     connection.query(`select * from cabang where nama like ?`,[cari],

@@ -67,12 +67,20 @@ module.exports = function(app) {
     
     app.get('/nasabah',nasabah.viewNasabahList);
     app.get('/nasabah/:nasabah_id',nasabah.viewNasabahDetail);
-    app.get('/nasabah/kendaraan',nasabah.viewKendaraanNasabah);
-    app.get('/nasabah/cash/:nasabah_id',nasabah.viewDpCash);
-    app.get('/nasabah/emas/:nasabah_id',nasabah.viewDpEmas);
-    app.get('/nasabah/jaminan/:nasabah_id',nasabah.viewDpJaminan);
-    app.get('/nasabah/mikro/:nasabah_id',nasabah.viewMikro);
-    app.get('/nasabah/pegawai/:nasabah_id',nasabah.viewPegawai);
+    app.post('/nasabah/get/kendaraan',nasabah.viewKendaraanNasabah);
+    app.post('/nasabah/get/cash',nasabah.viewDpCash);
+    app.post('/nasabah/get/jaminan',nasabah.viewDpJaminan);
+    app.post('/nasabah/get/emas',nasabah.viewDpEmas);
+    app.post('/nasabah/get/mikro',nasabah.viewMikro);
+    app.post('/nasabah/get/pegawai',nasabah.viewPegawai);
+    
+    // app.post('/nasabah/kendaraan',nasabah.viewKendaraanNasabah);
+    
+    // app.get('/nasabah/cash/:nasabah_id',nasabah.viewDpCash);
+    // app.get('/nasabah/emas/:nasabah_id',nasabah.viewDpEmas);
+    // app.get('/nasabah/jaminan/:nasabah_id',nasabah.viewDpJaminan);
+    // app.get('/nasabah/mikro/:nasabah_id',nasabah.viewMikro);
+    // app.get('/nasabah/pegawai/:nasabah_id',nasabah.viewPegawai);
     
     app.post('/uploadDokumen', uploadGambar.uploadDokumen)
     
@@ -84,12 +92,17 @@ module.exports = function(app) {
     app.get('/cabang/view',cabang.viewCabang);
     app.get('/cabang/view/:cari',cabang.cariCabang);
     
+    app.post('/cabang/terdekat',cabang.viewCabangTerdekat);
+    
     app.get('/emas/user/:userid',emas.viewEmasUser);
     app.get('/emas/konversi/:satuan',emas.viewEmasKonversi);
     
     app.get('/pengajuan/:user_id',pengajuan.viewPengajuan);
     
     app.post('/pengajuan/verifikasi',pengajuan.verifikasiPengajuan);
+    app.put('/pengajuan/lunas',pengajuan.lunasPengajuan);
+    
+    app.post('/kendaraan/bpkb',kendaraan.inputBpkb);
     
     app.get('/gcash/:user_id',gcash.viewGcash);
     
@@ -98,9 +111,20 @@ module.exports = function(app) {
     app.post('/pengajuan',pengajuan.createPengajuan);
     app.post('/pengajuan/buatAngsuran',angsuran.createAngsuran);
     app.put('/pengajuan/verifikasi',pengajuan.verifikasiPengajuan);
+    app.put('/pengajuan/tolak',pengajuan.tolakPengajuan);
     
     app.put('/pembayaran/transfer/:angsuranID',todoList.pembayaranTransfer);
     app.put('/pembayaran/dompet/:angsuranID',todoList.pembayaranDompet);
     app.put('/topup/:customerID',todoList.topUpDompet);
+    
+    app.post('/angsuran/hapus',angsuran.hapusAngsuran);
+    app.post('/dpcash/hapus',uangMuka.hapusCash);
+    app.post('/dpjaminan/hapus',uangMuka.hapusJaminan);
+    app.post('/dptabemas/hapus',uangMuka.hapusTabEmas);
+    app.post('/kendaraan/nasabah/hapus',kendaraan.hapusKendaraanNasabah);
+    app.post('/mikro/hapus',pekerjaan.hapusMikro);
+    app.post('/nasabah/hapus',nasabah.hapusNasabah);
+    app.post('/pengajuan/hapus',pengajuan.hapusPengajuan);
+    app.post('/pegawai/hapus',pekerjaan.hapusPegawai);
     
 };
