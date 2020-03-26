@@ -66,6 +66,7 @@ module.exports = function(app) {
     app.post('/nasabah',nasabah.createNasabah);
     
     app.get('/nasabah',nasabah.viewNasabahList);
+    app.post('/nasabah/cari',nasabah.cariNasabahList);
     app.get('/nasabah/:nasabah_id',nasabah.viewNasabahDetail);
     app.post('/nasabah/get/kendaraan',nasabah.viewKendaraanNasabah);
     app.post('/nasabah/get/cash',nasabah.viewDpCash);
@@ -115,6 +116,7 @@ module.exports = function(app) {
     
     app.put('/pembayaran/transfer/:angsuranID',todoList.pembayaranTransfer);
     app.put('/pembayaran/dompet/:angsuranID',todoList.pembayaranDompet);
+    app.put('/pembayaran/autodebet',pembayaran.autodebet);
     app.put('/topup/:customerID',todoList.topUpDompet);
     
     app.post('/angsuran/hapus',angsuran.hapusAngsuran);

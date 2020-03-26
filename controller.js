@@ -376,7 +376,7 @@ exports.topUpDompet = function (req, res) {
 
 function autoDebit() {
     connection.connect(function (err) {
-        connection.query("SELECT n.nasabah_id, n.user_id, p.pengajuan_id, a.angsuran_id, p.angsuran, g.nomor_gcash, DATE_FORMAT(a.tgl_jatuhtempo,'%Y-%m-%d') as tgl_jatuhtempo, DATE_FORMAT(curdate(),'%Y-%m-%d') as today FROM nasabah n join gcash g on n.user_id = g.user_id  join pengajuan p on p.nasabah_id = n.nasabah_id join angsuran a on a.pengajuan_id = p.pengajuan_id where g.autodebet = '1' and a.status='Belum Bayar' group by n.user_id order by a.tgl_jatuhtempo asc;", function (err, result, fields) {
+        connection.query("SELECT n.nasabah_id, n.user_id, p.pengajuan_id, a.angsuran_id, p.angsuran, g.nomor_gcash, DATE_FORMAT(a.tgl_jatuhtempo,'%Y-%m-%d') as tgl_jatuhtempo, DATE_FORMAT(curdate(),'%Y-%m-%d') as today FROM nasabah n join gcash g on n.user_id = g.user_id  join pengajuan p on p.nasabah_id = n.nasabah_id join angsuran a on a.pengajuan_id = p.pengajuan_id where g.autodebet = '1' and a.status='Belum Bayar' group by n.nasabah_id, n.user_id, p.pengajuan_id, a.angsuran_id, p.angsuran, g.nomor_gcash ORDER BY tgl_jatuhtempo ASC", function (err, result, fields) {
             if (err) throw err;
             for (let i = 0; i < result.length; i++) {
                 let jatuhtempo = result[i].tgl_jatuhtempo;
@@ -393,7 +393,7 @@ function autoDebit() {
                   console.log("waktunya bayar");
                   Request.post({
                       "headers": { "content-type": "application/json" },
-                      "url": "http://localhost:3000/gcash/getbalance",
+                      "url": "https://sleepy-garden-24110.herokuapp.com/gcash/getbalance",
                       "body": JSON.stringify({
                         "user_id" : user_id,
                         "nomor_gcash" : nomor_gcash
@@ -415,7 +415,7 @@ function autoDebit() {
 
                            Request.post({
                                 "headers": { "content-type": "application/json" },
-                                "url": "http://localhost:3000/pembayaran/getpembayaran",
+                                "url": "https://sleepy-garden-24110.herokuapp.com/pembayaran/getpembayaran",
                                 "body": JSON.stringify({
                                     "user_id": user_id
                                 })
@@ -430,7 +430,7 @@ function autoDebit() {
 
                                   Request.post({
                                       "headers": { "content-type": "application/json" },
-                                      "url": "http://localhost:3000/pembayaran/inquirygc",
+                                      "url": "https://sleepy-garden-24110.herokuapp.com/pembayaran/inquirygc",
                                       "body": JSON.stringify({
                                           "amount" : angsuran,
                                           "angsuran_id" : angsuran_id,

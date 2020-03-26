@@ -117,6 +117,19 @@ exports.viewNasabahList = function (req, res) {
         });
 };
 
+exports.cariNasabahList = function (req, res) {
+    let nasabah_id = '%'+req.body.nasabah_id+'%';
+    connection.query('select n.nasabah_id,nama from nasabah n join pengajuan p on (n.nasabah_id=p.nasabah_id) where verifikasi=false and tolak=false and n.nasabah_id like ?',[nasabah_id],
+        function (error, rows, fields) {
+            console.log(this.sql)
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
+};
+
 exports.viewNasabahDetail = function (req, res) {
     let nasabah_id = req.params.nasabah_id;
     connection.query('select * from nasabah where nasabah_id=?',[nasabah_id],

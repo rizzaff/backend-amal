@@ -167,6 +167,7 @@ exports.PembentukanNomorGcash = function (req, res){
         connection.query('INSERT INTO gcash (user_id, nama, ibu_kandung, tgl_lahir, nomor_hp, bank, no_rekening, nomor_gcash,pin) VALUES (?,?,?,?,?,?,?,?,?)',
         [user_id,nama,ibuKandung,tglLahir,nomorHp,bank,noRekening,nomor_gcash,pin], 
         function(err, result) {
+            console.log(this.sql)
             if (err) { 
                 connection.rollback(function() {
                     throw err;
@@ -175,6 +176,7 @@ exports.PembentukanNomorGcash = function (req, res){
             connection.query('INSERT INTO history_gcash (gcash_id, nomor_gcash, cash_in, cash_out, tgl_payment, jenis_transaksi, user_id) VALUES (?,?,?,?,?,?,?)',
             [gcash_id,nomor_gcash,cash_in,cash_out,tgl_payment,jenis_transaksi,user_id,status], 
             function(err, result) {
+                console.log(this.sql)
                 if (err) { 
                     connection.rollback(function() {
                         throw err;
@@ -221,6 +223,24 @@ exports.getHistoryGCash = function (req, res) {
                 console.log(this.sql)
             }
     })
+};
+
+exports.autodebet = function (req, res) {
+    
+    let nomor_gcash = req.body.nomor_gcash;
+    let value = req.body.value;
+
+    console.log(nomor_gcash)
+    connection.query('UPDATE gcash SET autodebet=? WHERE nomor_gcash = ?',
+        [value,nomor_gcash],
+        function (error, rows, fields) {
+            console.log(error)
+            if (error) {
+                console.log(error)
+            } else {
+                response.ok(rows, res)
+            }
+        });
 };
 
 exports.getHistoryAngsuran = function (req, res) {
